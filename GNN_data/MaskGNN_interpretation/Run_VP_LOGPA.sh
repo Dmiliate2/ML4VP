@@ -28,7 +28,7 @@ python build_graph_dataset.py --task_name ${task}
 # Train models
 echo "Training models"
 python Main.py --task_name ${task}
-exit 0
+
 # Substructure-Mask-Explanation
 echo "Substructure-Mask-Explanation"
 python SMEG_explain_for_substructure.py --task_name ${task} # calculate the prediction of molecules with different substructures masked

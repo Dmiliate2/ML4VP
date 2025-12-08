@@ -8,13 +8,11 @@
 #SBATCH --time=01:00:00
 #SBATCH --export=ALL
 
-# module purge
-# source /data/dmiliate/anaconda3/etc/profile.d/conda.sh
-# conda activate dgl071_copy
 module purge
-module load cuda/12.3.0
 source /data/dmiliate/anaconda3/etc/profile.d/conda.sh
-conda activate ML4VP_conda
+conda activate ML4VP
+module load gcc/12.2.0 
+module load cuda/11.8.0-zrz66eu
 
 # #########################################
 # #               USE MODEL
