@@ -1,0 +1,61 @@
+#------------------------------ Setup Files ---------------------------------
+variable			filename index ./Step0/S0_Min_Example
+
+
+
+#----------------------------- Box and atoms --------------------------------
+units           	real
+dimension       	3
+boundary        	p p p
+atom_style      	full
+
+
+#------------------------ Defining the interactions -------------------------
+pair_style      	lj/cut/coul/cut 12.0 12.0 
+bond_style      	harmonic
+angle_style     	harmonic
+dihedral_style 		opls
+improper_style     	cvff
+pair_modify 		mix geometric tail yes
+special_bonds   	lj/coul 0.0 0.0 0.0
+read_data  			InitialStructure/Example.data
+neighbor        	2.0 bin
+neigh_modify 		every 1 delay 0 check yes
+
+
+#---------------------------Simulation Variables---------------------------
+variable        	eqmT 		equal 234 			# [K] Equilibration Temp 
+variable        	eqmP 		equal 1				# [atm] Equilibrium pressure 
+variable 			nThermo 	equal 10 			# Write every N timesteps
+variable 			nDump 		equal 10			# Dump every N timesteps (typically match thermo)
+reset_timestep  	0
+
+
+
+
+
+
+
+
+
+
+
+
+
+#---------------------------- Minimize Energy -----------------------------
+velocity        	all create ${eqmT} 482648
+# No ensemble
+thermo          	${nThermo}
+fix 				thermo_print all print ${nThermo} "$(step),$(temp),$(press),$(density),$(pxx),$(pyy),$(pzz),$(pxy),$(pxz),$(pyz),$(pe),$(ke),$(etotal),$(evdwl),$(ecoul),$(epair),$(ebond),$(eangle),$(edihed),$(eimp),$(emol),$(etail),$(enthalpy),$(vol)" & 
+					append ${filename}_out.csv screen no title "step,temp,press,density,pxx,pyy,pzz,pxy,pxz,pyz,pe,ke,etotal,evdwl,ecoul,epair,ebond,eangle,edihed,eimp,emol,etail,enthalpy,vol"
+dump            	dump1 all custom ${nDump} ${filename}_w.lammpstrj id mol type x y z mass q
+dump            	dump2 all custom ${nDump} ${filename}_u.lammpstrj id mol type xu yu zu mass q
+dump_modify     	dump1 sort id
+dump_modify     	dump2 sort id
+# No progress restarts
+minimize        	1.0e-16 1.06e-6 100000 500000
+undump          	dump1
+undump          	dump2
+unfix				ensemble
+write_restart   	${filename}.restart
+write_data			${filename}.data

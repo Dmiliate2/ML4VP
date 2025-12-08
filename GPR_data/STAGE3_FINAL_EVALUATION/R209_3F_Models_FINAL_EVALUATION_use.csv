@@ -1,0 +1,2 @@
+SubsetIndex,#FeaturesInSubset,R2_Train,RMSE_Train,MAE_Train,MAPE_Train,R2_Val,RMSE_Val,MAE_Val,MAPE_val,FeaturesSubsetList,parameters
+6529,3,0.979718898,0.16263739,0.108668768,3.386108766,0.907102152,0.388994935,0.249397326,8.367065015,"Temperature[K],getawayHATSIP2_3,rho_1",pureQuadratic_rationalquadratic

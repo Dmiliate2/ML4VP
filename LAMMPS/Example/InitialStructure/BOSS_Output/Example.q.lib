@@ -1,0 +1,51 @@
+*Generated with LigParGen (israel.cabezadevaca@yale.edu)
+
+{MOL}
+[atoms]
+   1   O00       O800        -0.3551
+   2   C01       C801         0.0330
+   3   C02       C802         0.0176
+   4   C03       C803        -0.2374
+   5   C04       C804        -0.2442
+   6   C05       C805        -0.1837
+   7   C06       C806        -0.2341
+   8   H07       H807         0.1291
+   9   H08       H808         0.1291
+  10   H09       H809         0.1509
+  11   H0A       H810         0.0722
+  12   H0B       H811         0.0722
+  13   H0C       H812         0.0920
+  14   H0D       H813         0.0920
+  15   H0E       H814         0.1017
+  16   H0F       H815         0.1017
+  17   H0G       H816         0.0877
+  18   H0H       H817         0.0877
+  19   H0I       H818         0.0877
+
+[bonds]
+C01       O00       
+C02       O00       
+C03       C02       
+C04       C03       
+C05       C01       
+C06       C05       
+H07       C06       
+H08       C06       
+H09       C05       
+H0A       C01       
+H0B       C01       
+H0C       C02       
+H0D       C02       
+H0E       C03       
+H0F       C03       
+H0G       C04       
+H0H       C04       
+H0I       C04       
+
+[impropers]
+C01       C05       C06       H09       
+C05       C06       H07       H08       
+
+[charge_groups]
+O00 C01 C02 C03 C04 C05 C06 H07 H08 H09 H0A H0B H0C H0D H0E H0F H0G H0H H0I 
+

@@ -1,0 +1,206 @@
+LAMMPS (29 Sep 2021 - Update 3)
+KOKKOS mode is enabled (src/KOKKOS/kokkos.cpp:97)
+  will use up to 0 GPU(s) per node
+  using 1 OpenMP thread(s) per MPI task
+package kokkos
+#------------------------------ Setup Files ---------------------------------
+variable			filename index ./Step3/S3_NPT_Example
+variable			filename0 index ./Step2/S2_NPT_Example
+
+
+#----------------------------- Box and atoms --------------------------------
+units           	real
+dimension       	3
+boundary        	p p p
+atom_style      	full
+
+
+#------------------------ Defining the interactions -------------------------
+pair_style      	lj/cut/coul/cut 12.0 12.0
+bond_style      	harmonic
+angle_style     	harmonic
+dihedral_style 		opls
+improper_style     	cvff
+pair_modify 		mix geometric tail yes
+special_bonds   	lj/coul 0.0 0.0 0.0
+read_restart  		./${filename0}.restart
+read_restart  		././Step2/S2_NPT_Example.restart
+Reading restart file ...
+  restart file = 29 Sep 2021, LAMMPS = 29 Sep 2021
+  restoring atom style full/kk from restart
+  orthogonal box = (7.4492460 7.4492460 7.4492460) to (44.536511 44.536511 44.536511)
+  2 by 4 by 7 MPI processor grid
+  restoring pair style lj/cut/coul/cut/kk from restart
+  restoring bond style harmonic/kk from restart
+  restoring angle style harmonic/kk from restart
+  restoring dihedral style opls/kk from restart
+  restoring improper style cvff from restart
+  4997 atoms
+  4734 bonds
+  8153 angles
+  8942 dihedrals
+  526 impropers
+Finding 1-2 1-3 1-4 neighbors ...
+  special bond factors lj:    0        0        0       
+  special bond factors coul:  0        0        0       
+     4 = max # of 1-2 neighbors
+     6 = max # of 1-3 neighbors
+    11 = max # of 1-4 neighbors
+    14 = max # of special neighbors
+  special bonds CPU = 0.001 seconds
+  read_restart CPU = 0.021 seconds
+neighbor        	2.0 bin
+neigh_modify 		every 1 delay 0 check yes
+
+
+#---------------------------Simulation Variables---------------------------
+variable			nRun 		equal 50000					# Run for N timestep
+variable			nRestart 	equal 10000 				# Write restart every N timesteps
+variable 			nThermo 	equal 1000 					# Write every N timesteps
+variable        	nfreq   	equal 1000	 				# Calculate averages every this many timesteps
+variable        	nrepeat 	equal 100  					# Number of times to use input values for calculating averages
+variable        	nevery  	equal 10    				# Use input values every this many timesteps
+variable 			nDump 		equal 500					# Dump every N timesteps
+variable 	 		highT 		equal 1000 					# [K] High Temp for randomization
+variable        	eqmT 		equal 234 					# [K] Equilibration Temp
+variable        	eqmP 		equal 1						# [atm] Equilibrium pressure
+variable 			dt 			equal 1						# Timestep
+variable 			tdamp 		equal 100*${dt}				# Temperature damping parameter
+variable 			tdamp 		equal 100*1				
+variable 			pdamp 		equal 1000*${dt}			# Pressure damping parameter
+variable 			pdamp 		equal 1000*1			
+timestep  			${dt}									# Apply timestep
+timestep  			1									
+reset_timestep  	0
+
+
+
+#----------------------------- NPT Simulation -----------------------------
+fix             	ensemble all npt temp ${eqmT} ${eqmT} ${tdamp} iso ${eqmP} ${eqmP} ${pdamp}
+fix             	ensemble all npt temp 234 ${eqmT} ${tdamp} iso ${eqmP} ${eqmP} ${pdamp}
+fix             	ensemble all npt temp 234 234 ${tdamp} iso ${eqmP} ${eqmP} ${pdamp}
+fix             	ensemble all npt temp 234 234 100 iso ${eqmP} ${eqmP} ${pdamp}
+fix             	ensemble all npt temp 234 234 100 iso 1 ${eqmP} ${pdamp}
+fix             	ensemble all npt temp 234 234 100 iso 1 1 ${pdamp}
+fix             	ensemble all npt temp 234 234 100 iso 1 1 1000
+thermo 				${nThermo}
+thermo 				1000
+fix 				thermo_print all print ${nThermo} "$(step),$(temp),$(press),$(density),$(pxx),$(pyy),$(pzz),$(pxy),$(pxz),$(pyz),$(pe),$(ke),$(etotal),$(evdwl),$(ecoul),$(epair),$(ebond),$(eangle),$(edihed),$(eimp),$(emol),$(etail),$(enthalpy),$(vol)" 					append ${filename}_out.csv screen no title "step,temp,press,density,pxx,pyy,pzz,pxy,pxz,pyz,pe,ke,etotal,evdwl,ecoul,epair,ebond,eangle,edihed,eimp,emol,etail,enthalpy,vol"
+fix 				thermo_print all print 1000 "$(step),$(temp),$(press),$(density),$(pxx),$(pyy),$(pzz),$(pxy),$(pxz),$(pyz),$(pe),$(ke),$(etotal),$(evdwl),$(ecoul),$(epair),$(ebond),$(eangle),$(edihed),$(eimp),$(emol),$(etail),$(enthalpy),$(vol)" 					append ${filename}_out.csv screen no title "step,temp,press,density,pxx,pyy,pzz,pxy,pxz,pyz,pe,ke,etotal,evdwl,ecoul,epair,ebond,eangle,edihed,eimp,emol,etail,enthalpy,vol"
+fix 				thermo_print all print 1000 "$(step),$(temp),$(press),$(density),$(pxx),$(pyy),$(pzz),$(pxy),$(pxz),$(pyz),$(pe),$(ke),$(etotal),$(evdwl),$(ecoul),$(epair),$(ebond),$(eangle),$(edihed),$(eimp),$(emol),$(etail),$(enthalpy),$(vol)" 					append ./Step3/S3_NPT_Example_out.csv screen no title "step,temp,press,density,pxx,pyy,pzz,pxy,pxz,pyz,pe,ke,etotal,evdwl,ecoul,epair,ebond,eangle,edihed,eimp,emol,etail,enthalpy,vol"
+dump            	dump1 all custom ${nDump} ${filename}_w.lammpstrj id mol type x y z mass q
+dump            	dump1 all custom 500 ${filename}_w.lammpstrj id mol type x y z mass q
+dump            	dump1 all custom 500 ./Step3/S3_NPT_Example_w.lammpstrj id mol type x y z mass q
+dump            	dump2 all custom ${nDump} ${filename}_u.lammpstrj id mol type xu yu zu mass q
+dump            	dump2 all custom 500 ${filename}_u.lammpstrj id mol type xu yu zu mass q
+dump            	dump2 all custom 500 ./Step3/S3_NPT_Example_u.lammpstrj id mol type xu yu zu mass q
+dump_modify     	dump1 sort id
+dump_modify     	dump2 sort id
+restart 			${nRestart} ${filename}_*restart.restart
+restart 			10000 ${filename}_*restart.restart
+restart 			10000 ./Step3/S3_NPT_Example_*restart.restart
+run            		${nRun}
+run            		50000
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 14
+  ghost atom cutoff = 14
+  binsize = 7, bins = 6 6 6
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair lj/cut/coul/cut/kk, perpetual
+      attributes: half, newton on, kokkos_device
+      pair build: half/bin/kk/device
+      stencil: half/bin/3d
+      bin: kk/device
+Per MPI rank memory allocation (min/avg/max) = 7.069 | 7.107 | 7.146 Mbytes
+Step Temp E_pair E_mol TotEng Press Volume 
+       0    235.79972   -5483.8894    3463.5197    1491.1897   -614.02783    51012.243 
+    1000    233.81827    -5020.846    3453.3881    1914.5934    800.04838    50618.872 
+    2000    237.99572   -5409.3417    3420.7678    1555.6885     532.5302    50962.603 
+    3000    237.68812   -5407.2747    3432.2907    1564.6976    350.32116    51036.998 
+    4000    230.54446   -5324.4378    3504.8743    1613.7339   -20.532866    51308.103 
+    5000    238.96558   -5421.5265    3464.8816    1602.0608    303.51019    51084.085 
+    6000    236.97413   -5380.7717    3462.9368     1611.214    151.82362    50723.614 
+    7000    232.89122    -5319.321    3485.5326    1634.4572   -396.31726    51043.375 
+    8000    235.83521   -5267.0153    3491.8302    1736.9028   -1408.4075    51217.824 
+    9000    238.54934   -4887.7146    3475.0347    2139.8272    924.58883    51100.907 
+   10000    230.82579   -5305.6965    3515.0333    1646.8238   -409.44313    51224.209 
+   11000    234.47468    -5258.738     3435.725    1668.8137    858.80084    51245.301 
+   12000    234.49022   -5215.5796    3464.5446    1741.0231    433.61786    50994.507 
+   13000    231.67171   -5190.3725    3436.0276    1695.7397    381.00452    51187.174 
+   14000     236.6985   -5524.8989    3455.0311    1455.0763    313.48421    51301.022 
+   15000    234.45615   -5492.0841    3460.3801    1459.8468    1322.6997    51429.229 
+   16000    233.04604   -5573.2709    3549.0584    1446.3386   -734.01866    51339.066 
+   17000    229.95022   -5486.4851    3414.1346    1352.0973   -984.06663    51126.167 
+   18000     234.0728   -5346.3125    3431.7787     1571.308    1039.6682    51553.605 
+   19000    236.75795   -5408.9413    3506.9676    1623.8558   -1181.0011    51232.148 
+   20000    236.30573    -5454.518    3454.6789    1519.2558   -309.20928    50988.458 
+   21000    232.85659   -4975.7602     3448.557    1940.5268    696.02131    50607.381 
+   22000    229.26059   -5391.3141    3479.3054    1502.1692    1296.4602    50763.734 
+   23000    233.33833   -5257.5156    3495.3424    1712.7308   -1158.8972    51003.205 
+   24000    231.43208   -5296.6513    3500.5408    1650.4053   -374.01782    51280.194 
+   25000    234.89849   -5067.5458    3530.5509    1961.1433   -141.33901    51443.482 
+   26000     234.6154   -4936.5122    3498.2887    2055.6989    406.55979    51319.615 
+   27000    232.14699    -4998.208    3473.9732    1932.9275   -523.06349    51165.149 
+   28000    233.43042   -4902.4634    3461.4964    2035.3084    270.67599    51316.965 
+   29000    232.12221   -4989.7689    3399.7574     1866.782    338.30027    50937.364 
+   30000    235.97119   -5364.8481    3414.9451    1564.2099   -740.35616    51419.686 
+   31000    235.71535   -5219.3607    3445.6039    1736.5462   -999.71295    51656.016 
+   32000    231.59486   -5430.0671    3448.2624    1467.1353   -814.68226    51834.717 
+   33000    233.36562   -5095.3509    3518.2633    1898.2229    -1204.465     51380.54 
+   34000    237.98414   -5303.5247    3456.9247      1697.49    88.204632    51038.259 
+   35000    234.69797   -5074.3717    3402.5346    1823.3149    434.87551    51558.815 
+   36000    232.91226   -5573.4775    3506.7625     1401.844    729.14801     50931.64 
+   37000    232.29817   -5175.8094    3463.2077    1746.8122    163.22184    50908.114 
+   38000    234.74565   -5269.7439    3485.5525    1711.6707    217.51336    51069.943 
+   39000    234.73385   -5828.9376    3539.3007    1206.0494    519.37567    51198.309 
+   40000    234.85774   -5098.7165    3474.9637    1873.7786    -879.3166    51025.364 
+   41000    232.69563   -5105.9608    3453.2707    1812.6428    211.54068    50822.652 
+   42000    231.57406   -5500.9201    3489.8629    1437.5732    -620.2504    51444.416 
+   43000    233.28387   -5350.4564    3519.9695    1643.6062     701.0302    51189.805 
+   44000    232.68775   -5556.8774    3454.0552    1362.3934     436.1538    51350.087 
+   45000    231.81607   -5402.9034    3458.2472    1507.5781   -24.304281    51600.422 
+   46000    237.94694   -5020.5097    3493.2733    2016.2996    947.69422    50982.121 
+   47000    230.74517   -5019.7354    3409.4031    1825.9541   -6.1429721    51626.759 
+   48000     236.8053   -5174.3098    3495.6564    1847.8812    200.95256    50877.342 
+   49000    233.19916    -5531.301    3435.7651    1377.2956    594.31603    51328.708 
+   50000    235.89893   -5250.2652    3476.2308    1739.0024    138.89773    51452.657 
+Loop time of 62.6002 on 56 procs for 50000 steps with 4997 atoms
+
+Performance: 69.009 ns/day, 0.348 hours/ns, 798.719 timesteps/s
+99.7% CPU use with 56 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 26.774     | 32.552     | 39.034     |  45.6 | 52.00
+Bond    | 2.3701     | 2.688      | 3.1183     |  10.6 |  4.29
+Neigh   | 3.1473     | 3.1641     | 3.1899     |   0.6 |  5.05
+Comm    | 14.691     | 21.458     | 27.382     |  58.0 | 34.28
+Output  | 0.22963    | 0.26951    | 0.28628    |   2.0 |  0.43
+Modify  | 1.6112     | 1.808      | 1.9782     |   8.1 |  2.89
+Other   |            | 0.6606     |            |       |  1.06
+
+Nlocal:        89.2321 ave         101 max          75 min
+Histogram: 1 2 5 8 3 13 11 4 8 1
+Nghost:        5535.89 ave        5581 max        5492 min
+Histogram: 5 5 5 2 11 7 10 5 3 3
+Neighs:        49400.9 ave       59498 max       38513 min
+Histogram: 2 1 5 9 13 6 5 8 4 3
+
+Total # of neighbors = 2766452
+Ave neighs/atom = 553.62257
+Ave special neighs/atom = 8.7368421
+Neighbor list builds = 1445
+Dangerous builds = 0
+undump          	dump1
+undump          	dump2
+unfix				ensemble
+write_restart   	${filename}.restart
+write_restart   	./Step3/S3_NPT_Example.restart
+System init for write_restart ...
+write_data			${filename}.data
+write_data			./Step3/S3_NPT_Example.data
+System init for write_data ...
+Total wall time: 0:01:02

@@ -1,0 +1,8 @@
+R2:
+	Training: -0.9049
+	Test: -0.0359
+	Validation: -1.9618
+RMSE:
+	Training: 1.4908
+	Test: 1.4328
+	Validation: 1.0901

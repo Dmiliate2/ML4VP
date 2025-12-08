@@ -1,0 +1,43 @@
+2025-12-02 12:02:18 — INFO — INPUT SMILE: C=CCOCCC
+2025-12-02 12:02:18 — INFO — NUMBER OF OPTIMIZATIONS: 0
+2025-12-02 12:02:18 — INFO — Generating molecule from input SMILES: C=CCOCCC
+2025-12-02 12:02:18 — INFO — Center of mass position: -0.364  0.061  0.308
+2025-12-02 12:02:18 — INFO — Closest atom to the center of mass: O  3 with distance :  0.898  (A) 
+2025-12-02 12:02:18 — INFO — MOLECULE CHARGE USED: 0
+2025-12-02 12:02:18 — INFO — CHARGE ALGORITHM USED: CM1A
+2025-12-02 12:02:18 — INFO — RESIDUE NAME USED: MOL
+2025-12-02 12:02:18 — INFO — Parsing Bonds, Angles and dihedrals
+2025-12-02 12:02:18 — INFO — Parsing Atoms
+2025-12-02 12:02:18 — INFO — --- SUMMARY MOLECULE STRUCTURE ---
+2025-12-02 12:02:18 — INFO — Number of Atoms: 22
+2025-12-02 12:02:18 — INFO — Number of Variable Bonds: 18
+2025-12-02 12:02:18 — INFO — Number of Additional Bonds: 0
+2025-12-02 12:02:18 — INFO — Number of Variable Angles: 17
+2025-12-02 12:02:18 — INFO — Number of Additional Angles: 14
+2025-12-02 12:02:18 — INFO — Number of Variable Torsions: 16
+2025-12-02 12:02:18 — INFO — Number of Additional Torsions: 20
+2025-12-02 12:02:18 — INFO — Number of excluded Atoms: 0
+2025-12-02 12:02:18 — INFO — Generating Zmat
+2025-12-02 12:02:18 — INFO — Running BOSS
+2025-12-02 12:02:22 — INFO — Parsing BOSS molecule outputs
+2025-12-02 12:02:22 — INFO — Generating Q inputs
+2025-12-02 12:02:22 — INFO — Generating Gromacs inputs
+2025-12-02 12:02:22 — INFO — Generating CHARMM/NAMD inputs
+2025-12-02 12:02:22 — INFO — Generating TINKER inputs
+2025-12-02 12:02:22 — INFO — Generating openMM inputs
+2025-12-02 12:02:22 — INFO — Generating PQR inputs
+2025-12-02 12:02:22 — INFO — Generating DESMOND inputs
+2025-12-02 12:02:22 — INFO — Generating LAMMPS inputs
+2025-12-02 12:02:22 — INFO — Generating XPLOR inputs
+2025-12-02 12:02:22 — INFO —             
+    
+                    LigParGen finished succesfully!
+    
+    Please do not forget to cite the following references: 
+
+        1. LigParGen web server: an automatic OPLS-AA parameter generator for organic ligands  
+           Leela S. Dodda  Israel Cabeza de Vaca  Julian Tirado-Rives William L. Jorgensen 
+           Nucleic Acids Research, Volume 45, Issue W1, 3 July 2017, Pages W331–W336
+
+        2. 1.14*CM1A-LBCC: Localized Bond-Charge Corrected CM1A Charges for Condensed-Phase Simulations
+    
